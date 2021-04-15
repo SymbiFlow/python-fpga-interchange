@@ -15,7 +15,8 @@ from fpga_interchange.chip_info import ChipInfo, BelInfo, TileTypeInfo, \
         TileWireInfo, BelPort, PipInfo, TileInstInfo, SiteInstInfo, NodeInfo, \
         TileWireRef, CellBelMap, ParameterPins, CellBelPin, ConstraintTag, \
         CellConstraint, ConstraintType, Package, PackagePin, LutCell, \
-        LutElement, LutBel, CellParameter, DefaultCellConnections, DefaultCellConnection
+        LutElement, LutBel, CellParameter, DefaultCellConnections, DefaultCellConnection \
+        BelChain
 from fpga_interchange.constraints.model import Tag, Placement, \
         ImpliesConstraint, RequiresConstraint
 from fpga_interchange.constraint_generator import ConstraintPrototype
@@ -1710,6 +1711,17 @@ def populate_chip_info(device, constids, global_buffers, bel_bucket_seeds,
     for lut_element in device.device_resource_capnp.lutDefinitions.lutElements:
         assert lut_element.site not in lut_elements
         lut_elements[lut_element.site] = LutElementsEmitter(lut_element.luts)
+
+    bel_chains = {}
+    for bel_chain in device.device_resource_capnp.belChainsDefinitions.belChains:
+        assert bel_chain.name not in bel_chains.keys()
+        bel_chains[bel_chain.name] = BelChain(bel_chain.name,
+                                            bel_chain.patterns,
+                                            bel_chain.sites,
+                                            bel_chain.coordConfigs,
+                                            bel_chain.chainCells)
+
+        chip_info.bel_chains.append(bel_chains[bel_chain.name])
 
     for tile_type_index, tile_type in enumerate(
             device.device_resource_capnp.tileTypeList):

@@ -81,5 +81,12 @@ class BbaWriter():
 
     def check_labels(self):
         refs_and_labels = self.refs & self.labels
-        assert len(refs_and_labels) == len(self.refs)
-        assert len(refs_and_labels) == len(self.labels)
+        for ref in refs_and_labels:
+            if ref not in self.refs:
+                print("SHOULD NOT APPEAR")
+                assert False, ref
+        for ref in self.refs:
+            if ref not in refs_and_labels:
+                assert False, ref
+        assert len(refs_and_labels) == len(self.refs), "{} vs. {}".format(len(refs_and_labels), len(self.refs))
+        assert len(refs_and_labels) == len(self.labels), "{} vs. {}".format(len(refs_and_labels), len(self.labels))
