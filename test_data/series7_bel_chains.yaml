@@ -1,0 +1,36 @@
+belChains:
+  - name: carryChain
+    patterns: 
+      - {source: "CARRY4.CO[3]", sink: "CARRY4.CI"}
+    sites:
+      - SLICEL
+      - SLICEM
+    # on which coordinate the chain propagates
+    coordConfigs:
+      - {coord: y, step: 1}
+    chainCells:
+      - cell: XORCY
+        inputPins:
+          - {name: CI, width: 1}
+          - {name: LI, width: 1}
+        outputPins:
+          - {name: O, width: 1}
+      - cell: MUXCY
+        inputPins:
+          - {name: CI, width: 1}
+          - {name: DI, width: 1}
+          - {name: S, width: 1}
+        outputPins:
+          - {name: O, width: 1}
+      - cell: CARRY4
+        # {<port_name>: <width>}
+        inputPins:
+          - {name: CI, width: 1}
+          - {name: CYINIT, width: 1}
+          - {name: DI, width: 4}
+          - {name: S, width: 1}
+        outputPins:
+          - {name: CO, width: 4}
+          - {name: O, width: 4}
+
+# Add here more BEL chains available for series7
